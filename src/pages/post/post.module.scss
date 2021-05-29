@@ -1,1 +1,17 @@
-// TODO
+.bannerContainer {
+  margin: 0 auto;
+  max-width: 1440px;
+  > img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+  margin-bottom: 5rem;
+}
+
+.title {
+  font-size: 3rem;
+  letter-spacing: -0.5px;
+  color: #F8F8F8;
+  margin-bottom: 2rem;
+}

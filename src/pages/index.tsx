@@ -9,6 +9,8 @@ import styles from './home.module.scss';
 
 import { format, parseISO } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 interface Post {
   uid?: string;
@@ -30,12 +32,47 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
+  const [posts, setPosts] = useState<Post[]>(postsPagination.results)
+  const [nextPage, setNextPage] = useState(postsPagination.next_page)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  function dateFormated(date: string) {
+    return format(parseISO(date), 'd MMM yyyy', { locale: ptBR })
+  }
+
+  function loadMorePosts() {
+    const morePosts = fetch(`${nextPage}`)
+      .then(response => response.json())
+      .then((data: PostPagination) => {
+        setPosts([...posts, ...data.results])
+        setNextPage(data.next_page)
+      })
+    
+  }
+
+  useEffect(() => {
+    const postsFormated = posts.map((post) => {
+      return {
+        ...post,
+        first_publication_date: dateFormated(post.first_publication_date)
+      }
+    })
+    setPosts(postsFormated)
+  }, [])
+
   return (
     <>
+      <Head>
+        <title>SpaceTraveling</title>
+      </Head>
       <section>
         <div className={commonStyles.container}>
-          <img src="/Logo.svg" alt="Logo" className={styles.logo}/>
-          {postsPagination.results.map(({ data, first_publication_date, uid }) => (
+          <Link href="/">
+            <a>
+              <img src="/Logo.svg" alt="Logo" className={styles.logo}/>
+            </a>
+          </Link>
+          {posts.map(({ data, first_publication_date, uid }) => (
             <article className={styles.post} key={uid}>
               <Link href={`/post/${uid}`}>
                 <a>
@@ -56,8 +93,11 @@ export default function Home({ postsPagination }: HomeProps) {
             </article>
           ))}
           
-          {postsPagination.next_page && (
-            <button>Carregar mais posts</button>
+          {nextPage && (
+            <button 
+              className={styles.morePosts}
+              onClick={loadMorePosts}
+            >Carregar mais posts</button>
           )}
         </div>
       </section>
@@ -71,23 +111,29 @@ export const getStaticProps: GetStaticProps = async () => {
   const postsResponse = await prismic.query([
     Prismic.predicates.at('document.type', 'posts')
   ], {
-    pageSize: 20
+    pageSize: 10
   });
 
   const posts = postsResponse.results.map(post => {
     return {
       uid: post.uid,
-      first_publication_date: format(parseISO(post.last_publication_date), 'd MMM yyyy', { locale: ptBR }),
-      data: post.data
+      first_publication_date: post.last_publication_date,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author
+      }
     }
   })
 
+  const postsPagination = {
+    next_page: postsResponse.next_page,
+    results: postsResponse.results
+  } 
+
   return {
     props: {
-      postsPagination: {
-        next_page: postsResponse.next_page,
-        results: posts
-      } 
+      postsPagination
     }
   }
 };
