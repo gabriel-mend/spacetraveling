@@ -34,7 +34,6 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps) {
   const [posts, setPosts] = useState<Post[]>(postsPagination.results)
   const [nextPage, setNextPage] = useState(postsPagination.next_page)
-  const [currentPage, setCurrentPage] = useState(1)
 
   function dateFormated(date: string) {
     return format(parseISO(date), 'd MMM yyyy', { locale: ptBR })

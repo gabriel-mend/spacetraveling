@@ -15,3 +15,18 @@
   color: #F8F8F8;
   margin-bottom: 2rem;
 }
+
+.content {
+  margin-top: 4rem;
+
+  color: #D7D7D7;
+  line-height: 140%;
+  font-size: 18px;
+  
+  & div > h1 {
+    font-size: 36px;
+    line-height: 140%;
+    margin-bottom: 2rem;
+    color: #F8F8F8;
+  }
+}
