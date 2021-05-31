@@ -1,31 +1,53 @@
-.logo {
-  margin: 5rem 0 4rem;
+.posts {
+  margin-top:2em;
+
+  > a {
+    display:block;
+  }
+
+  a + a {
+    margin-top: 3rem;
+  }
+
+  button {
+    border:none;
+    background:transparent;
+    font-weight:600;
+    font-size: 1.125rem;
+    color:var(--highlight);
+    margin-top:4rem;
+  }
+
 }
 
 .post {
-  h1 {
-    font-size: 1.86667rem;
+
+  strong {
+    font-size:1.75rem;
+    font-weight: bold;
+    color:var(--heading);
   }
 
-  p {
-    margin: 0.8rem 0 1.6rem;
-    font-size: 1.2rem;
-    color: var(--white-gray);
+  p{
+    margin-top:0.5rem;
+    font-size:1.125rem;
   }
 
-  & + & {
-    margin-top: 4rem;
-  }
-}
+  ul {
+    list-style: none;
+    margin-top:1.5rem;
+    display: flex;
 
-.morePosts {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
-  text-align: justify;
-  color: #FF57B2;
-  background-color: transparent;
-  border: none;
-  margin-top: 4rem;
+    & li {
+      font-size:0.875rem;
+
+      & svg {
+        margin-right: 0.5rem;
+      }
+
+      & + li {
+        margin-left: 1.625rem;
+      }
+    }
+  }
 }
